@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div style="font-size: 32px;">
+    <ru-by data-ruby="xīng">星</ru-by>
+    <ru-by data-ruby="kōng">空</ru-by>
+    ，
+    <ru-by data-ruby="ほしぞら">星空</ru-by>
+  </div>
+  <!-- ---------------------------------------------------------------- -->
+  <script type="text/plain" id="rubyTemplate">
+    <ruby>
+      <slot></slot><rp>(</rp><rt></rt><rp>)</rp>
+    </ruby>
+  </script>
+  <script type="module">
+    const RubyElement = class MyElement extends HTMLElement {
+      /**
+       * 监控属性
+       */
+      static observedAttributes = /** @type {const} */ (['data-ruby'])
+
+      /**
+       * 内部结构
+       * @type {DocumentFragment}
+       */
+      static #templateFragment
+
+      /**
+       * customElements.define
+       * @param {string=} name 
+       */
+      static define(name = 'ru-by') {
+        const tmpl = document.createElement('template');
+        // templateFragment
+        tmpl.innerHTML = document.getElementById('rubyTemplate').innerHTML;
+
+        this.#templateFragment = tmpl.content;
+
+        customElements.define(name, this);
+        return this;
+      }
+
+      /**
+       * 组件初始化函数
+       */
+      constructor() {
+        super();
+        const shadowRootroot = this.attachShadow({ mode: 'open' });
+        const node = MyElement.#templateFragment.cloneNode(true);
+        shadowRootroot.appendChild(node);
+        // root.adoptedStyleSheets = [sheet];
+      }
+
+      // 生命周期函数
+      connectedCallback() {
+        console.log('Custom square element added to page.');
+      }
+      disconnectedCallback() {
+        console.log('Custom square element removed from page.');
+      }
+      adoptedCallback() {
+        console.log('Custom square element moved to new page.');
+      }
+
+      /**
+       * 监控属性变更
+       * @param name {typeof MyElement['observedAttributes'][number]}
+       * @param oldValue {string}
+       * @param newValue {string}
+       */
+      attributeChangedCallback(name, oldValue, newValue) {
+        console.log('Custom square element attributes changed.', { name, oldValue, newValue });
+        if (name === "data-ruby") {
+          this.shadowRoot.querySelector('rt').innerHTML = newValue;
+        }
+      }
+    }
+
+    RubyElement.define();
+  </script>
+</body>
+
+</html>
