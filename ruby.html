@@ -11,25 +11,24 @@
 <body>
   <div style="font-size: 32px;">
     <ru-by data-ruby="xīngkōng">星空</ru-by>
-    ，
+    <br>
     <ru-by data-ruby="ほしぞら">星空</ru-by>
   </div>
   <!-- ---------------------------------------------------------------- -->
-  <script type="text/plain" id="rubyTemplate">
-    <ruby><slot></slot><rp>(</rp><rt></rt><rp>)</rp></ruby>
-  </script>
   <script type="module">
     // @ts-check
     'use strict';
 
     /** 
      * 初始化辅助
-     * @type {(element: Element, innerHTML: string) => void}
+     * @type {(element: Element, innerHTML: string, sheet?: CSSStyleSheet) => void}
      */
-    const initCustomElement = (element, innerHTML) => {
+    const initCustomElement = (element, innerHTML, sheet) => {
       const shadowRoot = element.attachShadow({ mode: 'open' });
       shadowRoot.innerHTML = innerHTML;
-      // root.adoptedStyleSheets = [sheet];
+      // if(sheet){
+      //   root.adoptedStyleSheets = [sheet];
+      // }
     };
 
     const RubyElement = class MyElement extends HTMLElement {
@@ -43,7 +42,7 @@
        */
       constructor() {
         super();
-        initCustomElement(this, document.getElementById('rubyTemplate').innerHTML);
+        initCustomElement(this, `<ruby><slot></slot><rp>(</rp><rt></rt><rp>)</rp></ruby>`);
       }
 
       // 生命周期函数
