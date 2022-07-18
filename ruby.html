@@ -5,23 +5,33 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>RubyElement</title>
 </head>
 
 <body>
   <div style="font-size: 32px;">
-    <ru-by data-ruby="xīng">星</ru-by>
-    <ru-by data-ruby="kōng">空</ru-by>
+    <ru-by data-ruby="xīngkōng">星空</ru-by>
     ，
     <ru-by data-ruby="ほしぞら">星空</ru-by>
   </div>
   <!-- ---------------------------------------------------------------- -->
   <script type="text/plain" id="rubyTemplate">
-    <ruby>
-      <slot></slot><rp>(</rp><rt></rt><rp>)</rp>
-    </ruby>
+    <ruby><slot></slot><rp>(</rp><rt></rt><rp>)</rp></ruby>
   </script>
   <script type="module">
+    // @ts-check
+    'use strict';
+
+    /** 
+     * 初始化辅助
+     * @type {(element: Element, innerHTML: string) => void}
+     */
+    const initCustomElement = (element, innerHTML) => {
+      const shadowRoot = element.attachShadow({ mode: 'open' });
+      shadowRoot.innerHTML = innerHTML;
+      // root.adoptedStyleSheets = [sheet];
+    };
+
     const RubyElement = class MyElement extends HTMLElement {
       /**
        * 监控属性
@@ -29,35 +39,11 @@
       static observedAttributes = /** @type {const} */ (['data-ruby'])
 
       /**
-       * 内部结构
-       * @type {DocumentFragment}
-       */
-      static #templateFragment
-
-      /**
-       * customElements.define
-       * @param {string=} name 
-       */
-      static define(name = 'ru-by') {
-        const tmpl = document.createElement('template');
-        // templateFragment
-        tmpl.innerHTML = document.getElementById('rubyTemplate').innerHTML;
-
-        this.#templateFragment = tmpl.content;
-
-        customElements.define(name, this);
-        return this;
-      }
-
-      /**
        * 组件初始化函数
        */
       constructor() {
         super();
-        const shadowRootroot = this.attachShadow({ mode: 'open' });
-        const node = MyElement.#templateFragment.cloneNode(true);
-        shadowRootroot.appendChild(node);
-        // root.adoptedStyleSheets = [sheet];
+        initCustomElement(this, document.getElementById('rubyTemplate').innerHTML);
       }
 
       // 生命周期函数
@@ -85,7 +71,7 @@
       }
     }
 
-    RubyElement.define();
+    customElements.define('ru-by', RubyElement);
   </script>
 </body>
 
