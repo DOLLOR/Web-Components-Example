@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <d-article>
+    <h1 slot="header">How to be a wizard</h1>
+    <ol>
+      <li>Grow a long, majestic beard.</li>
+      <li>Wear a tall, pointed hat.</li>
+      <li>Have I mentioned the beard?</li>
+    </ol>
+    </span>
+    <p slot="footer">© 2018 Gandalf</p>
+    </span>
+  </d-article>
+  <script>
+    const DArticle = class MyElement extends HTMLElement {
+      /**
+       * 组件初始化函数
+       */
+      constructor() {
+        super();
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = `
+<article>
+  <slot name="header"></slot>
+  <slot></slot>
+  <footer>
+    <slot name="footer"></slot>
+  </footer>
+</article>
+<style>
+  article {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  footer {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    background-color: #45a1ff;
+    color: #fff;
+  }
+</style>
+    `;
+      }
+      connectedCallback() {
+        console.log('Custom square element added to page.', this);
+      }
+      // 注册元素
+      static {
+        customElements.define('d-article', this);
+      }
+    }
+  </script>
+</body>
+
+</html>
