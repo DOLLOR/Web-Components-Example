@@ -17,20 +17,6 @@
   <!-- ---------------------------------------------------------------- -->
   <script>
     // @ts-check
-    'use strict';
-
-    /** 
-     * 初始化辅助
-     * @type {(element: Element, innerHTML: string, sheet?: CSSStyleSheet) => void}
-     */
-    const initCustomElement = (element, innerHTML, sheet) => {
-      const shadowRoot = element.attachShadow({ mode: 'open' });
-      shadowRoot.innerHTML = innerHTML;
-      // if(sheet){
-      //   root.adoptedStyleSheets = [sheet];
-      // }
-    };
-
     const RubyElement = class MyElement extends HTMLElement {
       /**
        * 监控属性
@@ -42,7 +28,9 @@
        */
       constructor() {
         super();
-        initCustomElement(this, `<ruby><slot></slot><rp>(</rp><rt></rt><rp>)</rp></ruby>`);
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = `<ruby><slot></slot><rp>(</rp><rt></rt><rp>)</rp></ruby>`;
+        // shadowRoot.adoptedStyleSheets = [sheet];
       }
 
       // 生命周期函数
@@ -68,9 +56,12 @@
           this.shadowRoot.querySelector('rt').innerHTML = newValue;
         }
       }
-    }
 
-    customElements.define('ru-by', RubyElement);
+      // 注册元素
+      static {
+        customElements.define('ru-by', this);
+      }
+    }
   </script>
 </body>
 
