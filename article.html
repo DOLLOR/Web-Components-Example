@@ -21,6 +21,7 @@
     </span>
   </d-article>
   <script>
+    // @ts-check
     const DArticle = class MyElement extends HTMLElement {
       /**
        * 组件初始化函数
@@ -42,7 +43,6 @@
     display: grid;
     grid-template-rows: auto 1fr auto;
   }
-
   footer {
     display: flex;
     justify-content: center;
@@ -52,9 +52,12 @@
   }
 </style>
     `;
+        this.shadowRoot.onslotchange = function (ev) {
+          console.log(ev.type, ev, this);
+        };
       }
       connectedCallback() {
-        console.log('Custom square element added to page.', this);
+        console.log('Custom square element added to page.', this, this.querySelectorAll('[slot]'));
       }
       // 注册元素
       static {
